@@ -37,19 +37,19 @@ const initialState: NotificationState = {
   jobType: "full-time",
   statusOptions: ["pending", "interview", "declined"],
   status: "pending",
-  search:'',
-  searchStatus: 'all',
-  searchType:"all",
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
   sort: "latest",
   jobs: [],
   totalJobs: 0,
   numOfPages: 1,
   page: 1,
   defaultStats: {
-    pending:0,
+    pending: 0,
     interview: 0,
-    declined:0
+    declined: 0,
   },
   monthlyApplications: [],
 };
@@ -79,8 +79,8 @@ export interface AllContext extends NotificationState {
   setEditJob: (id: string) => void;
   deleteJob: (id: string) => Promise<void>;
   showStats: () => Promise<void>;
-  clearFilter: ()=> void;
-  changePage: (page:number)=> void
+  clearFilter: () => void;
+  changePage: (page: number) => void;
 }
 
 const AppContext = React.createContext({} as AllContext);
@@ -130,17 +130,17 @@ const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
     dispatch({ type: "INPUT_CHANGE", payload: { name: name, value: value } });
   };
 
-  const clearFilter = ()=>{
-    dispatch({type: "CLEAR_FILTERS"})
-  }
+  const clearFilter = () => {
+    dispatch({ type: "CLEAR_FILTERS" });
+  };
 
   const clearJob = () => {
     dispatch({ type: "CLEAR_JOB" });
   };
 
-  const changePage = (page:number)=>{
-    dispatch({type: "CHANGE_PAGE", payload:{page}})
-  }
+  const changePage = (page: number) => {
+    dispatch({ type: "CHANGE_PAGE", payload: { page } });
+  };
 
   const addUserToLocalStorage = ({ user, token, location }: RegisteredUser) => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -263,11 +263,12 @@ const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
   };
 
   const getJobs = async () => {
-    const {search, searchStatus, searchType, sort, page}:SearchParams = state
-    let url:string = `jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+    const { search, searchStatus, searchType, sort, page }: SearchParams =
+      state;
+    let url: string = `jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
 
-    if(search){
-      url = url + `&search=${search}`
+    if (search) {
+      url = url + `&search=${search}`;
     }
 
     dispatch({ type: "SETUP_USER_BEGIN" });
@@ -323,20 +324,22 @@ const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
       return;
     } catch (err) {
       logoutUser();
-    } 
+    }
   };
 
   const showStats = async () => {
     dispatch({ type: "SHOW_STATS_BEGIN" });
     try {
       const response = await authFetch("/jobs/stats");
-      const { defaultStats, monthlyApplications }: StatsResponse = response.data;
-
-    
+      const { defaultStats, monthlyApplications }: StatsResponse =
+        response.data;
 
       dispatch({
         type: "SHOW_STATS_SUCCESS",
-        payload: { defaultStats: defaultStats, monthlyApplications: monthlyApplications },
+        payload: {
+          defaultStats: defaultStats,
+          monthlyApplications: monthlyApplications,
+        },
       });
     } catch (err) {
       logoutUser();
@@ -388,7 +391,7 @@ const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
     searchStatus: state.searchStatus,
     searchType: state.searchType,
     sort: state.sort,
-    sortOptions: state.sortOptions
+    sortOptions: state.sortOptions,
   };
 
   return (

@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { IUser } from "../models/User";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User";
@@ -23,7 +23,7 @@ const register = async (
     }
 
     const userAlreadyExists = await User.findOne({ email });
-    if (userAlreadyExists) { 
+    if (userAlreadyExists) {
       const error = new BadRequestError(
         "please use a different email, as this one already exists"
       );
@@ -99,7 +99,7 @@ const updateUser = async (
       user.email = email;
       user.name = name;
       user.lastName = lastName;
-      user.location = location 
+      user.location = location;
       await user.save();
     }
     const token = user.createJWT();

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
+import { Request, Response, ErrorRequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
 
 interface defaultError {
@@ -10,7 +10,6 @@ const errorHandlerMiddleware = (
   err: ErrorRequestHandler | any,
   req: Request,
   res: Response,
-  next: NextFunction
 ) => {
   
   const defaultError: defaultError = {

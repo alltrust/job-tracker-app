@@ -56,7 +56,7 @@ const reducer = (state: NotificationState, action: ActionTypes): any => {
       return {
         ...state,
         [action.payload!.name!.toString()]: action.payload!.value,
-        page:1
+        page: 1,
       };
     case "CLEAR_JOB":
       return {
@@ -150,9 +150,15 @@ const reducer = (state: NotificationState, action: ActionTypes): any => {
         monthlyApplications: action.payload?.monthlyApplications,
       };
     case "CLEAR_FILTERS":
-      return {...state, search: '', searchStatus: "all", searchType: "all", sort: 'latest'};
+      return {
+        ...state,
+        search: "",
+        searchStatus: "all",
+        searchType: "all",
+        sort: "latest",
+      };
     case "CHANGE_PAGE":
-      return{...state, page: action.payload?.page}
+      return { ...state, page: action.payload?.page };
 
     default:
       throw new Error();

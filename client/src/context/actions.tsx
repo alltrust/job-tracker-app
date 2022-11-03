@@ -50,6 +50,6 @@ export default interface ActionTypes {
     id?: string;
     defaultStats?: StatsResponse["defaultStats"];
     monthlyApplications?: StatsResponse["monthlyApplications"];
-    page?: number
+    page?: number;
   };
 }
