@@ -25,7 +25,6 @@ const app = express();
 
 
 const port: string | number = process.env.PORT || 5000;
-const MONGO_URL: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.copgrn2.mongodb.net/${process.env.MONGO_DATABASE}`;
 
 if(process.env.NODE_ENV !== "production"){
   app.use(morgan('dev'))
@@ -49,10 +48,11 @@ app.get('*', function (request, response) {
   response.sendFile(path.resolve(__dirname, '../../client/build', 'index.html'))
 })
 
-//goes at end in case no other routes match
 app.use(notFoundMiddlware);
 app.use(errorHandlerMiddleware); 
 
+
+const MONGO_URL: string = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.copgrn2.mongodb.net/${process.env.MONGO_DATABASE}`;
 
 const startServer = async () => {
   try {
