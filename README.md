@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> Inspired by John Smilga with his MERN Udemy course. Incorporated now with type-checking as well. Keep track of all the job applications you make and their current status.
+> Incorporated now with type-checking. Keep track of all the job applications you make and their current status.
 
 ## Install
 
