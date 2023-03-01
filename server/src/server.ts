@@ -1,4 +1,4 @@
-import express, { Request, Response} from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -49,11 +49,11 @@ app.get("*", function (request, response) {
 app.use(notFoundMiddlware);
 app.use(errorHandlerMiddleware);
 
-const MONGO_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.copgrn2.mongodb.net/${process.env.MONGO_DATABASE}`;
-
 const startServer = async () => {
   try {
-    await connectDB(MONGO_URL);
+    if (process.env.MONGO_URL) {
+      await connectDB(process.env.MONGO_URL);
+    }
     app.listen(port, (): void => {
       console.log(`listening on ${port} okok!!`);
     });

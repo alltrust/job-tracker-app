@@ -63,7 +63,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       next(error);
     }
 
-    const isPasswordCorrect: boolean = await user!.comparePassword(password);
+    const isPasswordCorrect: boolean | undefined = await user?.comparePassword(password);
     if (!isPasswordCorrect) {
       const error = new UnauthenticatedError("please check your password");
       next(error);
@@ -76,7 +76,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
   } catch (err) {
     next(err);
-  }
+  } 
 };
 
 const updateUser = async (
@@ -90,7 +90,7 @@ const updateUser = async (
     next(errors);
   }
   try {
-    const user = await User.findOne({ _id: req.user.userId });
+    const user = await User.findOne({ _id: req.user?.userId });
     if (!user) {
       const errors = new NotFoundError("User not found");
       next(errors);

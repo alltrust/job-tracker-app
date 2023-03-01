@@ -38,13 +38,12 @@ const createJob = async (
 ) => {
   const { position, company }: UserJob = req.body;
 
-
   if (!company || !position) {
     const errors = new BadRequestError("Please Provide all Data values");
     next(errors);
   }
 
-  req.body.createdBy = req.user.userId;
+  req.body.createdBy = req.user?.userId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
@@ -61,7 +60,9 @@ const deleteJob = async (
       const errors = new NotFoundError("Job not found cannot be deleted");
       next(errors);
     }
-    checkPermissions(req.user, job!.createdBy);
+    if (req.user) {
+      checkPermissions(req.user, job!.createdBy);
+    }
 
     await Job.deleteOne({ _id: jobId });
     res.status(StatusCodes.OK).json({ msg: "Successfully deleted job!" });
@@ -71,7 +72,7 @@ const deleteJob = async (
 };
 
 interface QueryObject {
-  createdBy: string;
+  createdBy: string | undefined;
   status?: string | ParsedQs | string[] | ParsedQs[];
   jobType?: string | ParsedQs | string[] | ParsedQs[];
   position?: string | ParsedQs | string[] | ParsedQs[];
@@ -85,7 +86,7 @@ const getAllJobs = async (
   const { status, jobType, search, sort } = req.query;
 
   const queryObject: QueryObject = {
-    createdBy: req.user.userId,
+    createdBy: req.user?.userId,
   };
 
   if (status && status !== "all") {
@@ -139,7 +140,7 @@ const updateJob = async (
 ) => {
   const { id: jobId } = req.params;
   const { company, position }: UserJob = req.body;
-  
+
   if (!company || !position) {
     const errors = new BadRequestError("Field is empty!!!");
     next(errors);
@@ -152,7 +153,9 @@ const updateJob = async (
       next(errors);
     }
 
-    checkPermissions(req.user, job!.createdBy);
+    if (req.user) {
+      checkPermissions(req.user, job!.createdBy);
+    }
 
     const updatedJob = await Job.findOneAndUpdate({ _id: jobId }, req.body, {
       new: true,
@@ -165,8 +168,8 @@ const updateJob = async (
 };
 
 const showStats = async (req: UserRequest, res: Response) => {
-  let stats: Stats[] = await Job.aggregate([
-    { $match: { createdBy: new Types.ObjectId(req.user.userId) } },
+  const stats: Stats[] = await Job.aggregate([
+    { $match: { createdBy: new Types.ObjectId(req.user?.userId) } },
     { $group: { _id: "$status", count: { $sum: 1 } } },
   ]);
 
@@ -176,14 +179,14 @@ const showStats = async (req: UserRequest, res: Response) => {
     return total;
   }, {} as StatsReduced);
 
-  const defaultStats: StatsReduced = {
+  const defaultStats: StatsReduced = { 
     pending: statsReduced.pending || 0,
     declined: statsReduced.declined || 0,
     interview: statsReduced.interview || 0,
   };
 
   const monthlyApps: MonthlyApps[] = await Job.aggregate([
-    { $match: { createdBy: new Types.ObjectId(req.user.userId) } },
+    { $match: { createdBy: new Types.ObjectId(req.user?.userId) } },
     {
       $group: {
         _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },

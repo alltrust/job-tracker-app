@@ -2,9 +2,13 @@ import React from "react";
 
 export interface FormRowProps {
   name: string;
-  type?: string ;
-  value: string ;
-  handleChange: (el:  React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => void;
+  type?: string;
+  value: string;
+  handleChange: (
+    el:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
   labelText: string;
 }
 
@@ -21,6 +25,7 @@ const FormRow = ({
         {labelText || name}
       </label>
       <input
+        id={name}
         name={name}
         className="form-input"
         value={value}

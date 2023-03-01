@@ -24,7 +24,6 @@ const Register = (): JSX.Element => {
   const { email, password, isMember, name } = value;
 
   const {
-    isLoading,
     showAlert,
     displayAlert,
     clearAlert,
@@ -113,13 +112,13 @@ const Register = (): JSX.Element => {
           />
         </div>
 
-        <button type="submit" className="btn btn-block" disabled={isLoading}>
+        <button type="submit" className="btn btn-block">
           Submit
         </button>
         <p>
           {value.isMember ? "Not a member yet? " : "Already a member?"}
 
-          <button type="button" className="member-btn" onClick={toggleMember}>
+          <button  type="button" className="member-btn" onClick={toggleMember}>
             {value.isMember ? "Register" : "Login"}
           </button>
         </p>

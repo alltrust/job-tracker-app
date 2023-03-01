@@ -13,6 +13,7 @@ import reducer from "./reducer";
 
 interface ChildrenProps {
   children: React.ReactNode;
+  value?: {}
 }
 
 const user: string | null = localStorage.getItem("user");

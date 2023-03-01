@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { UnauthenticatedError } from "../errors";
 
 export interface UserRequest extends Request {
-  user?: Record<string, unknown>;
+  user?: { userId: string };
 }
 
 interface UserJWTPayload extends JwtPayload {
@@ -29,7 +29,8 @@ const authMiddleware = async (
     ) as UserJWTPayload;
 
     const { userId } = payload;
-    req.user = { userId: userId };
+
+    req.user = { userId: userId || "" };
     next();
   } catch (err) {
     const errors = new UnauthenticatedError("Authentication invalid");

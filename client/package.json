@@ -8,7 +8,6 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/axios": "^0.14.0",
     "@types/history": "^5.0.0",
-    "@types/jest": "^27.5.2",
     "@types/moment": "^2.13.0",
     "@types/node": "^16.11.62",
     "@types/react": "^18.0.21",
@@ -31,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@toolz/allow-react)/\" --env=jsdom",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -53,6 +52,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.26"
+    "@types/jest": "^29.4.0",
+    "@types/styled-components": "^5.1.26",
+    "msw": "^1.1.0"
   }
 }
