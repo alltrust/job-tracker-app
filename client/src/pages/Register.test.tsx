@@ -2,27 +2,33 @@ import Register from "./Register";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { AppProvider } from "../context/appContext";
+import { AppContext, AppProvider } from "../context/appContext";
 import user from "@testing-library/user-event";
+import { AllContext } from "../context/appContext";
 import { rest } from "msw";
 import { setupServer } from "msw/lib/node";
+import { mock } from "jest-mock-extended";
 
-interface IRenderRegister {
-  prop?: jest.Mock<any, any> | (()=>{});
-}
-
-function renderRegister(prop?: IRenderRegister) {
-  render(
-    <AppProvider value={prop}>
-      <MemoryRouter>
-        <Register />
-      </MemoryRouter>
-    </AppProvider>
-  );
-
-  // afterEach(()=>{
-  //   cleanup()
-  // })
+function renderRegister(prop?:{}) {
+  const props = mock<AllContext>(prop);
+  
+  if (!prop) {
+    render(
+      <AppProvider>
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </AppProvider>
+    );
+  } else {
+    render(
+      <AppContext.Provider value={props}>
+        <MemoryRouter>
+          <Register />
+        </MemoryRouter>
+      </AppContext.Provider>
+    );
+  }
 }
 
 test("Register heading is rendered on screen", () => {
@@ -69,16 +75,7 @@ describe("when user clicks Sign in button", () => {
   const handlers = [
     rest.post("/api/v1/auth/register", (req, res, ctx) => {
       return res(
-        ctx.json({
-          user: {
-            name: "someTest",
-            email: "please@test.com",
-            lastName: "Tester",
-            location: "some location",
-          },
-          token: "tokenString",
-          location: "some location",
-        })
+        ctx.json({})
       );
     }),
   ];
@@ -93,59 +90,46 @@ describe("when user clicks Sign in button", () => {
   afterAll(() => {
     server.close();
   });
-  test("setUpUser function should be called", async () => {
-    const testUser = {
-      name: "someTest",
-      email: "please@test.com",
-      password: "apassword",
-    };
-    const setUpUser = jest.fn();
-    renderRegister(setUpUser(testUser));
+  test("setUpUser function should be called and succes Alert displays", async () => {
+    const setUpUser = jest.fn()
+    const showAlert = true;
+    const alertType = "success"
+    const props = {setUpUser, showAlert, alertType}
 
-    const submitButton = screen.getByRole("button", { name: "Submit" });
+    renderRegister(props);
+
+    const submitButton = screen.getByRole("button", { name: /submit/i });
 
     const nameInput = screen.getByRole("textbox", { name: /name/i });
     const emailInput = screen.getByRole("textbox", { name: /e-mail/i });
     const passwordInput = screen.getByLabelText(/password/i);
 
+    const name = "owner";
+    const email = "owner@test.com";
+    const password = "apassword";
+
     user.click(nameInput);
-    user.keyboard("owner");
+    user.keyboard(name);
 
     user.click(emailInput);
-    user.keyboard("please@test.com");
+    user.keyboard(email);
 
     user.click(passwordInput);
-    user.keyboard("apassword");
+    user.keyboard(password);
 
-    // screen.debug();
     userEvent.click(submitButton);
 
-    // screen.debug();
-    // pause();
-    
     const alertElement = await screen.findByRole("alert")
-    // screen.debug();
-    // const testUser = {
-    //   name: "owner",
-    //   email: "please@test.com",
-    //   password: "apassword",
-    // };
 
+
+    const currentUser = setUpUser.mock.calls[0][0].currentUser;
+    const expectedCurrentUser = { name, email, password };
+
+    expect(currentUser).toEqual(expectedCurrentUser);
     expect(setUpUser).toHaveBeenCalled();
-    expect(setUpUser).toHaveBeenCalledWith({name: "someTest",email:"please@test.com", password: "apassword"});
-
-
-
 
     expect(alertElement).toBeInTheDocument()
     expect(alertElement).toHaveAttribute("class", "alert alert-success")
   });
+ 
 });
-
-// const pause = () => {
-//   new Promise((resolve) => {
-//     setTimeout(() => {
-//       return resolve;
-//     }, 500);
-//   });
-// };

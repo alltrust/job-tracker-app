@@ -84,7 +84,9 @@ export interface AllContext extends NotificationState {
   changePage: (page: number) => void;
 }
 
-const AppContext = React.createContext({} as AllContext);
+
+
+export const AppContext = React.createContext({} as AllContext);
 
 const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
