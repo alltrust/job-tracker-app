@@ -51,7 +51,7 @@ const AddJob = () => {
   };
   return (
     <Wrapper>
-      <form className="form" onSubmit={submitHandler}>
+      <form className="form" aria-label="form" onSubmit={submitHandler}>
         <h3>{isEditing ? "Edit Job" : "Add Job"}</h3>
         {showAlert && <Alert />}
         <div className="form-center">

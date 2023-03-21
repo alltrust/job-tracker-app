@@ -20,7 +20,7 @@ const user: string | null = localStorage.getItem("user");
 const userToken: string | null = localStorage.getItem("token");
 const userLocation: string | null = localStorage.getItem("location");
 
-const initialState: NotificationState = {
+export const initialState: NotificationState = {
   showSidebar: false,
   isLoading: false,
   showAlert: false,
