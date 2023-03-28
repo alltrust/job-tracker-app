@@ -4,9 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { AppContext} from "../context/appContext";
 import user from "@testing-library/user-event";
-import { AllContext } from "../context/appContext";
-import { rest } from "msw";
-import { setupServer } from "msw/lib/node";
+
 import { mock } from "jest-mock-extended";
 
 const mockedUsedNavigate = jest.fn();
@@ -16,8 +14,8 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-function renderRegister(prop:any) {
-  const mockedProps = mock<AllContext>(prop);
+function renderRegister(prop?:any) {
+  const mockedProps = mock<any>(prop);
 
     render(
       <AppContext.Provider value={mockedProps}>
@@ -25,77 +23,61 @@ function renderRegister(prop:any) {
           <Register />
         </MemoryRouter>
       </AppContext.Provider>
-    );
-  // }
+    ); 
 }
 
-test("Register heading is rendered on screen", () => {
-  renderRegister({});
+describe("on user register page", ()=>{
 
-  const headingElement = screen.getByText("Register");
-
-  expect(headingElement).toBeInTheDocument();
-});
-
-test("Page toggles 'Login' and 'Register' heading if the button for the member is clicked", () => {
-  renderRegister({});
-
-  const headingElement = screen.getByRole("heading");
-  const toggleButton = screen.getByRole("button", { name: "Login" });
-  expect(headingElement).toBeInTheDocument();
-
-  userEvent.click(toggleButton);
-  const RegisterHeadingElement = screen.getByRole("heading", {
-    name: "Login",
-  });
-
-  expect(RegisterHeadingElement).toBeInTheDocument();
-});
-
-test("Alert with danger class is shown if form is submitted is with fields empty", () => {
-  const alertType = "danger"
-  const props = {alertType}
-
-  renderRegister(props);
+  test("Register heading is rendered on screen", () => {
+    renderRegister();
   
+    const headingElement = screen.getByText("Register");
+  
+    expect(headingElement).toBeInTheDocument();
+  });
+  
+  test("Page toggles 'Login' and 'Register' heading if the button for the member is clicked", () => {
+  
+    renderRegister();
 
-  const submitButton = screen.getByRole("button", { name: "Submit" });
-  userEvent.click(submitButton);
-
-  const AlertDiv = screen.getByRole("alert");
-
-  expect(AlertDiv).toBeInTheDocument()
-  expect(AlertDiv).toHaveAttribute("class", "alert alert-danger")
-});
-
-
+    const headingElement = screen.getByRole("heading");
+    const toggleButton = screen.getByRole("button", { name: "Login" });
+    expect(headingElement).toBeInTheDocument();
+  
+    user.click(toggleButton);
+    const RegisterHeadingElement = screen.getByRole("heading", {
+      name: "Login",
+    });
+  
+    expect(RegisterHeadingElement).toBeInTheDocument();
+  });
+  
+  test("Alert with danger class is shown if form is submitted is with fields empty", () => {
+    const alertText = ""
+    const alertType = "danger"
+    const props = {alertType, alertText}
+  
+    renderRegister(props);
+    
+  
+    const submitButton = screen.getByRole("button", { name: "Submit" });
+    userEvent.click(submitButton);
+  
+    const AlertDiv = screen.getByRole("alert");
+  
+    expect(AlertDiv).toBeInTheDocument()
+    expect(AlertDiv).toHaveAttribute("class", "alert alert-danger")
+  });
+})
 
 describe("when user clicks Sign in button", () => {
-  const handlers = [
-    rest.post("/api/v1/auth/register", (req, res, ctx) => {
-      return res(ctx.json({}));
-    }),
-  ];
 
-  const server = setupServer(...handlers);
-
-  beforeAll(() => {
-    server.listen();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  test("setUpUser function should be called and succes Alert displays", async () => {
+  test("setUpUser function should be called and success Alert displays", async () => {
     const setUpUser = jest.fn();
     const showAlert = true;
     const alertType = "success";
-    const props = { setUpUser, showAlert, alertType };
+    const alertText = "test"
+    const props = {setUpUser, showAlert, alertText, alertType};
 
     renderRegister(props);
 
@@ -131,6 +113,7 @@ describe("when user clicks Sign in button", () => {
     expect(alertElement).toBeInTheDocument();
     expect(alertElement).toHaveAttribute("class", "alert alert-success");
   });
+
   test("should redirect to '/' if theres a user", async() => {
     jest.useFakeTimers();
 

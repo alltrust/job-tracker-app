@@ -10,6 +10,7 @@ const SmallSidebar = () => {
   return (
     <Wrapper>
       <div
+      data-testid= "sidebar-container-small-test"
         className={
           showSidebar ? "sidebar-container show-sidebar" : "sidebar-container"
         }

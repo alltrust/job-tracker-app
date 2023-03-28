@@ -26,7 +26,7 @@ const PageBtnContainer = () => {
     changePage(newPage)
   };
   return (
-    <Wrapper>
+    <Wrapper data-testid="paginated-btn-container">
       <button className="prev-btn" onClick={prevPage}>
         <HiChevronDoubleLeft />
         prev

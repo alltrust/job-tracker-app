@@ -13,7 +13,7 @@ const ChartsContainer = ()=>{
     }
 
     return (
-        <Wrapper>
+        <Wrapper data-testid="test-charts-container">
             <h4>Monthly Applications</h4>
             <button type='button' onClick={toggleBarChart}>{barChartState? "AreaChart" : "BarChart"}</button>
             {barChartState ? <BarChart data={data}/> : <AreaChart data={data}/>}

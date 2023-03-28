@@ -6,7 +6,7 @@ const StatsItem = ({icon, count, title, color, bcg}:DefaultProps)=>{
         <Wrapper color={color} bcg={bcg}>
             <header>
                 <span className='count'>{count}</span>
-                <div className='icon'>{icon}</div>
+                <div data-testid="icon-wrapper" className='icon'>{icon}</div>
             </header>
             <h5 className='title'>{title}</h5>
         </Wrapper>

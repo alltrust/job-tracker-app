@@ -13,7 +13,7 @@ import reducer from "./reducer";
 
 interface ChildrenProps {
   children: React.ReactNode;
-  value?: {}
+  value?: any
 }
 
 const user: string | null = localStorage.getItem("user");
@@ -86,9 +86,9 @@ export interface AllContext extends NotificationState {
 
 
 
-export const AppContext = React.createContext({} as AllContext);
+export const AppContext = React.createContext({} as any);
 
-const AppProvider = ({ children }: ChildrenProps): JSX.Element => {
+const AppProvider = ({ children, value }: ChildrenProps): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const authFetch = axios.create({

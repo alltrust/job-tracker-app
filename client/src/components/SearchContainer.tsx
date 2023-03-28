@@ -32,7 +32,7 @@ const SearchContainer = () => {
 
   return (
     <Wrapper>
-      <form onSubmit={submitHandler} className='form' >
+      <form data-testid="test-search-form" onSubmit={submitHandler} className='form' >
         <h4>Search Form</h4>
 
         <div className="form-center">

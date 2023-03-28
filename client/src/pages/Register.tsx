@@ -20,6 +20,7 @@ const initialValue: User = {
 };
 
 const Register = (): JSX.Element => {
+  
   const [value, setValue] = useState<User>(initialValue);
   const { email, password, isMember, name } = value;
 

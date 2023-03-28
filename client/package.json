@@ -5,6 +5,7 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "@types/axios": "^0.14.0",
     "@types/history": "^5.0.0",
     "@types/moment": "^2.13.0",
@@ -51,11 +52,11 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.4.0",
     "@types/styled-components": "^5.1.26",
     "jest": "^27.5.1",
     "jest-mock-extended": "^3.0.3",
-    "msw": "^1.1.0"
+    "msw": "^1.1.0",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }

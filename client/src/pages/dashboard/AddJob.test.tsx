@@ -1,15 +1,40 @@
-import { screen, render, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { AllContext, AppContext } from "../../context/appContext";
-import { mock } from "jest-mock-extended";
-import { initialState } from "../../context/appContext";
-import AddJob from "./AddJob";
+import {
+  screen,
+  render,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { rest } from "msw";
-import { setupServer } from "msw/lib/node";
+import { mock } from "jest-mock-extended";
+import { MemoryRouter } from "react-router-dom";
+import {
+  AppProvider,
+  AppContext,
+  initialState,
+  AllContext,
+} from "../../context/appContext";
+import AddJob from "./AddJob";
+import toContainRole from "../../test/helpers/toContainRole";
+import toContainRoleNames from "../../test/helpers/toContainerRoleNames";
 
-const renderAddJob = (props?: any) => {
-  const mockedProps = mock<AllContext>(props || initialState);
+const inputTextNames = ["Position", "Company", "Location"];
+const inputSelectNames = ["Status", "Job Type"];
+const buttonNames = ["submit", "clear"];
+
+
+
+expect.extend({ toContainRole, toContainRoleNames });
+
+const renderAddJob = () => {
+  render(
+    <AppProvider>
+      <MemoryRouter>
+        <AddJob />
+      </MemoryRouter>
+    </AppProvider>
+  );
+};
+
+const renderAddJobWithProps = (props: any) => {
+  const mockedProps = mock<AllContext>(props);
 
   render(
     <AppContext.Provider value={mockedProps}>
@@ -20,75 +45,26 @@ const renderAddJob = (props?: any) => {
   );
 };
 
-const inputTextNames = ["Position", "Company", "Location"];
-const inputSelectNames = ["Status", "Job Type"];
-const buttonNames = ["submit", "clear"];
+describe("Add Job Page", () => {
+  test("should render the form with all its displayed functionality", () => {
 
-const toContainRole = (container: HTMLElement, role: string, quantity = 1) => {
-  const elements = within(container).queryAllByRole(role);
+    renderAddJob();
 
-  let isElementInForm = true;
+    const addJobHeader = screen.getByRole("heading", { name: /add job/i });
+    const form = screen.getByRole("form");
 
-  if (elements.length === quantity && isElementInForm) {
-    return { pass: true, message: () => "success." };
-  }
+    expect(form).toContainRole("textbox", 3);
+    expect(form).toContainRole("combobox", 2);
+    expect(form).toContainRole("button", 2);
 
-  return {
-    pass: false,
-    message: () =>
-      `expected to find ${quantity} ${role} elements. Found ${elements.length}`,
-  };
-};
+    expect(form).toContainRoleNames("textbox", inputTextNames);
+    expect(form).toContainRoleNames("combobox", inputSelectNames);
+    expect(form).toContainRoleNames("button", buttonNames);
 
-const toContainRoleNames = (
-  container: HTMLElement,
-  role: string,
-  names: string[]
-) => {
-  let returnValue = {
-    pass: true,
-    message: () => "",
-  };
+    expect(addJobHeader).toBeInTheDocument();
 
-  for (let name of names) {
-    const element = within(container).queryByRole(role, {
-      name: new RegExp(`${name}`),
-    });
-
-    if (!element) {
-      returnValue = {
-        pass: false,
-        message: () => ` expected to find ${names} with role ${role}.`,
-      };
-    }
-    return returnValue;
-  }
-  return returnValue;
-};
-
-expect.extend({ toContainRole, toContainRoleNames });
-
-describe("Add Job page", () => {
-  // test("should render the form with all its displayed functionality", () => {
-  //   renderAddJob();
-
-  //   const addJobHeader = screen.getByRole("heading", { name: /add job/i });
-  //   const form = screen.getByRole("form");
-
-  //   expect(form).toContainRole("textbox", 3);
-  //   expect(form).toContainRole("combobox", 2);
-  //   expect(form).toContainRole("button", 2);
-
-  //   expect(form).toContainRoleNames("textbox", inputTextNames);
-  //   expect(form).toContainRoleNames("combobox", inputSelectNames);
-  //   expect(form).toContainRoleNames("button", buttonNames);
-
-  //   expect(addJobHeader).toBeInTheDocument();
-  // });
-
-  //test the clear functionality
-  test("inputs should clear when on clear button click", async() => {
-    // const user = userEvent.setup()
+  });
+  test("it should test for values on user keyboard input", async () => {
 
     renderAddJob();
 
@@ -96,52 +72,87 @@ describe("Add Job page", () => {
     const companyInput = screen.getByRole("textbox", { name: /company/i });
     const locationInput = screen.getByRole("textbox", { name: /location/i });
 
-    const clearBtn = screen.getByRole("button", { name: /clear/i });
-
     userEvent.click(positionInput);
-    userEvent.keyboard("software test");
+    userEvent.keyboard("value");
 
     userEvent.click(companyInput);
-    userEvent.keyboard("testing company");
+    userEvent.keyboard("test");
 
     userEvent.click(locationInput);
-    userEvent.keyboard("testing location");
+    userEvent.keyboard("location");
 
-    // userEvent.click(clearBtn);
+    expect(positionInput).toHaveValue("value");
+    expect(companyInput).toHaveValue("test");
+    expect(locationInput).toHaveValue("location");
 
+    const clearBtn = screen.getByRole("button", { name: /clear/i });
+
+    userEvent.click(clearBtn);
     expect(positionInput).toHaveValue("");
     expect(companyInput).toHaveValue("");
-    expect(locationInput).toHaveValue("");
 
-    screen.debug()
   });
-  // test("heading is edit job if isEditing is true", () => {
-  //   const props = { ...initialState, isEditing: true };
 
-  //   renderAddJob(props);
+  test("heading is edit job if isEditing is true", () => {
 
-  //   const editJobHeader = screen.getByRole("heading", { name: /edit job/i });
+    const props = { ...initialState, isEditing: true };
 
-  //   expect(editJobHeader).toBeInTheDocument();
-  // });
+    renderAddJobWithProps(props);
 
-  // //test alert
-  // test("displayAlert is called if form is submitted with empty fields", () => {
-  //   const displayAlert = jest.fn();
-  //   const props = { ...initialState, displayAlert };
+    const editJobHeader = screen.getByRole("heading", { name: /edit job/i });
 
-  //   renderAddJob(props);
+    expect(editJobHeader).toBeInTheDocument();
 
-  //   const submitBtn = screen.getByRole("button", { name: /submit/i });
-  //   userEvent.click(submitBtn);
+  });
 
-  //   expect(displayAlert).toHaveBeenCalled();
-  // });
+  test("alert is displayed in form is submitted with empty values", () => {
+
+    renderAddJob();
+
+    const alertDiv = screen.queryByRole("alert");
+    expect(alertDiv).not.toBeInTheDocument();
+
+    const submitBtn = screen.getByRole("button", { name: /submit/i });
+    userEvent.click(submitBtn);
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toBeInTheDocument();
+
+  });
 });
 
-// describe("addJob page on submit", () => {
+describe("on adding job", () => {
+
+  test("should call createJob if user is not editing", async () => {
+
+    const createJob = jest.fn();
+
+    const position = "testing";
+    const company = "testing co";
+    const jobLocation = "location";
+
+    const props = {
+      ...initialState,
+      position,
+      company,
+      jobLocation,
+      createJob,
+    };
+
+    renderAddJobWithProps(props);
+
+    const submitBtn = screen.getByRole("button", { name: /submit/i });
+
+    userEvent.click(submitBtn);
+
+    expect(createJob).toHaveBeenCalled();
+
+  });
+});
+
+// describe("on editing Job", () => {
 //   const handlers = [
-//     rest.post("/api/v1/jobs", (req, res, ctx) => {
+//     rest.post("/api/v1/jobs/1", (req, res, ctx) => {
 //       return res(ctx.status(200));
 //     }),
 //   ];
@@ -160,39 +171,9 @@ describe("Add Job page", () => {
 //     server.close();
 //   });
 
-//   test("should call createJob if user is not editing", async () => {
-//     const createJob = jest.fn();
+//   test("should edit a current job", () => {
 
-//     const props = {
-//       ...initialState,
-//       createJob,
-//     };
+// renderAddJobWithProps()
 
-//     renderAddJob(props);
-
-//     const position = "testing";
-//     const company = "testing co";
-//     const location = "location";
-
-//     const positionInput = screen.getByRole("textbox", { name: /position/i });
-//     const companyInput = screen.getByRole("textbox", { name: /company/i });
-//     const locationInput = screen.getByRole("textbox", { name: /location/i });
-
-//     const submitBtn = screen.getByRole("button", { name: /submit/i });
-
-//     userEvent.click(positionInput);
-//     userEvent.keyboard(position);
-
-//     userEvent.click(companyInput);
-//     userEvent.keyboard(company);
-
-//     userEvent.click(locationInput);
-//     userEvent.keyboard(location);
-
-//     userEvent.click(submitBtn);
-
-//     screen.debug()
-
-//     expect(createJob).toHaveBeenCalled();
 //   });
 // });

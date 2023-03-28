@@ -11,8 +11,8 @@ import {
 
 const BarCharts = ({ data }: CustomComponentProps) => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} margin={{ top: 50 }}>
+    <ResponsiveContainer  width="100%" height={300}>
+      <BarChart data-testid="bar-chart-test" data={data} margin={{ top: 50 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis allowDecimals={false} />

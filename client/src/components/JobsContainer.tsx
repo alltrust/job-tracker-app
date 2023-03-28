@@ -30,7 +30,7 @@ const JobsContainer = () => {
       <h5>
         {totalJobs} job{jobs.length > 0 && "s"} found
       </h5>
-      <div className="jobs">
+      <div data-testid="jobs-container" className="jobs">
         {jobs.map((job: JobType) => {
           return <Job key={job._id} {...job} />;
         })}

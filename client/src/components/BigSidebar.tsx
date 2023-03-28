@@ -8,6 +8,7 @@ const BigSidebar = () => {
   return (
     <Wrapper>
       <div
+        data-testid="sidebar-container-big-test"
         className={
           showSidebar ? "sidebar-container" : "sidebar-container show-sidebar"
         }

@@ -11,6 +11,7 @@ const reducer = (state: NotificationState, action: ActionTypes): any => {
         alertText: "please provide all values",
       };
     case "CLEAR_ALERT":
+      console.log("CLEARED ALERT")
       return {
         ...state,
         showAlert: false,
@@ -161,7 +162,7 @@ const reducer = (state: NotificationState, action: ActionTypes): any => {
       return { ...state, page: action.payload?.page };
 
     default:
-      throw new Error();
+      return state
   }
 };
 
