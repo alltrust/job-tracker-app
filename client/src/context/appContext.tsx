@@ -242,8 +242,10 @@ const AppProvider = ({ children, value }: ChildrenProps): JSX.Element => {
 
     try {
       await authFetch.post("/jobs", currentJob);
+
       dispatch({ type: "CREATE_JOB_SUCCESS" });
       dispatch({ type: "CLEAR_JOB" });
+      
     } catch (err) {
       const errors = err as Error | AxiosError;
 

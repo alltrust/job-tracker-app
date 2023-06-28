@@ -59,6 +59,7 @@ describe("Job Component", () => {
   });
 
   test("jobs edit fn and delete job fn should be called on clicks", () => {
+    
     const setEditJob = jest.fn();
     const deleteJob = jest.fn();
 
