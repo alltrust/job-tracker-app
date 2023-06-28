@@ -1,17 +1,14 @@
 {
-  "homepage": "http://alltrust.github.io/job-tracker-app",
   "name": "jobify-practice",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd client && npm run build",
+    "build-client": "cd client && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npm start --prefix client",
     "server": "npm run dev server --prefix server --ignore client",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -21,8 +18,7 @@
     "@typescript-eslint/parser": "^5.42.0",
     "concurrently": "^7.4.0",
     "eslint": "^8.26.0",
-    "eslint-plugin-react": "^7.31.10",
-    "gh-pages": "^5.0.0"
+    "eslint-plugin-react": "^7.31.10"
   },
   "dependencies": {
     "@types/moment": "^2.13.0",

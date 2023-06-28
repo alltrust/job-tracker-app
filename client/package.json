@@ -1,4 +1,5 @@
 {
+  "homepage": "http://alltrust.github.io/job-tracker-app",
   "name": "jobify-practice",
   "version": "0.1.0",
   "private": true,
@@ -31,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@toolz/allow-react)/\" --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "cd client && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +57,7 @@
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "@types/styled-components": "^5.1.26",
+    "gh-pages": "^5.0.0",
     "jest": "^27.5.1",
     "jest-mock-extended": "^3.0.3",
     "msw": "^1.1.0",
